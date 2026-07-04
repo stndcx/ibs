@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://stndcx.github.io/ibs/feed.xml" rel="self" type="application/atom+xml" /><link href="https://stndcx.github.io/ibs/" rel="alternate" type="text/html" /><updated>2026-07-04T01:49:45+00:00</updated><id>https://stndcx.github.io/ibs/feed.xml</id><title type="html">IBS - Índice de Bioactividad del Suelo</title><subtitle>Marco abierto para la evaluación rápida de la actividad microbiana</subtitle><entry><title type="html">Compactación: por qué la biología no es suficiente</title><link href="https://stndcx.github.io/ibs/blog/2026/07/02/compactacion-por-que-la-biologia-no-es-suficiente/" rel="alternate" type="text/html" title="Compactación: por qué la biología no es suficiente" /><published>2026-07-02T13:00:00+00:00</published><updated>2026-07-02T13:00:00+00:00</updated><id>https://stndcx.github.io/ibs/blog/2026/07/02/compactacion-por-que-la-biologia-no-es-suficiente</id><content type="html" xml:base="https://stndcx.github.io/ibs/blog/2026/07/02/compactacion-por-que-la-biologia-no-es-suficiente/"><![CDATA[<h1 id="compactación-por-qué-la-biología-no-es-suficiente">Compactación: por qué la biología no es suficiente</h1>
+
+<p>Durante años, la compactación fue tratada como un problema estrictamente físico: tránsito excesivo, maquinaria pesada, pisoteo.<br />
+Sin embargo, en sistemas productivos reales, la compactación no actúa sola ni de manera aislada. Su verdadero impacto aparece cuando limita la capacidad del suelo para expresar su potencial biológico.</p>
+
+<p>Un suelo puede mostrar buena actividad microbiana, niveles adecuados de materia orgánica y condiciones químicas aceptables, pero aun así fallar en sostener el cultivo.<br />
+En muchos casos, la razón es simple: las raíces no pueden crecer.</p>
+
+<h2 id="qué-entendemos-por-compactación">Qué entendemos por compactación</h2>
+
+<p>La compactación del suelo es el aumento de la resistencia mecánica que enfrenta una raíz al intentar crecer y explorar el perfil.<br />
+Se expresa comúnmente como resistencia a la penetración, medida en kilopascales (kPa).</p>
+
+<p>Desde el punto de vista funcional:</p>
+
+<ul>
+  <li>A valores bajos, las raíces crecen sin restricciones.</li>
+  <li>A medida que la resistencia aumenta, el crecimiento radicular se vuelve más lento, superficial o directamente se detiene.</li>
+  <li>Cuando la raíz no explora el suelo, el cultivo no accede al agua ni a los nutrientes, aunque estos estén presentes.</li>
+</ul>
+
+<p>La compactación, entonces, no elimina recursos: impide que el cultivo los use.</p>
+
+<h2 id="por-qué-no-la-incorporamos-como-un-parámetro-más">Por qué no la incorporamos como un parámetro más</h2>
+
+<p>El IBS nace como un índice biológico, enfocado en procesos vivos:</p>
+<ul>
+  <li>respiración microbiana,</li>
+  <li>materia orgánica,</li>
+  <li>condiciones químicas y térmicas favorables.</li>
+</ul>
+
+<p>Agregar la compactación como una variable más dentro de la fórmula principal habría mezclado causas con limitantes.</p>
+
+<p>Por eso tomamos una decisión conceptual clara:</p>
+
+<blockquote>
+  <p>La compactación no define el potencial del suelo, define el límite para expresarlo.</p>
+</blockquote>
+
+<h2 id="el-criterio-ibs-potencial-vs-funcionalidad">El criterio IBS: potencial vs. funcionalidad</h2>
+
+<p>En el enfoque IBS distinguimos dos niveles.</p>
+
+<h3 id="ibs-base--potencial-biológico">IBS base — Potencial biológico</h3>
+
+<p>Refleja qué tan activo, equilibrado y favorable es el suelo desde el punto de vista biológico, sin considerar restricciones físicas.</p>
+
+<p>Es lo que el suelo podría ofrecer.</p>
+
+<h3 id="ibs-funcional--desempeño-real">IBS funcional — Desempeño real</h3>
+
+<p>Ajusta ese potencial según la resistencia mecánica que enfrentan las raíces.</p>
+
+<p>Es lo que el suelo realmente puede entregar en ese ambiente.</p>
+
+<p>La compactación actúa entonces como un factor reductor, no como un componente estructural del índice.</p>
+
+<h2 id="cómo-traducimos-la-compactación-en-pérdida-funcional">Cómo traducimos la compactación en pérdida funcional</h2>
+
+<p>La relación entre resistencia a la penetración y crecimiento radicular no es lineal.</p>
+
+<ul>
+  <li>Aumentos pequeños a valores bajos casi no afectan.</li>
+  <li>Cerca de un umbral crítico, pequeñas variaciones generan grandes pérdidas.</li>
+  <li>A valores altos, el sistema ya está colapsado.</li>
+</ul>
+
+<p>Por eso utilizamos una función logística (sigmoide), que permite representar esa transición progresiva:</p>
+
+<ul>
+  <li>Zona sin limitación</li>
+  <li>Zona de restricción creciente</li>
+  <li>Zona de restricción severa</li>
+</ul>
+
+<p>El resultado es un Factor de Compactación entre 0 y 1.</p>
+
+<h2 id="qué-significa-el-factor-de-compactación">Qué significa el Factor de Compactación</h2>
+
+<p>El factor expresa qué proporción del potencial del suelo sigue siendo accesible para el cultivo.</p>
+
+<ul>
+  <li>
+    <p>Factor = 1<br />
+La compactación no limita el crecimiento radicular.</p>
+  </li>
+  <li>
+    <p>Factor = 0.7<br />
+Aproximadamente un 30% del potencial productivo queda inaccesible.</p>
+  </li>
+  <li>
+    <p>Factor = 0.4<br />
+La limitación es severa, aun si la biología es buena.</p>
+  </li>
+</ul>
+
+<p>Este factor no castiga al suelo; describe una realidad física.</p>
+
+<h2 id="de-ibs-base-a-ibs-funcional">De IBS base a IBS funcional</h2>
+
+<p>El IBS funcional surge de aplicar ese factor al índice biológico:</p>
+
+<p>IBS funcional = IBS base × Factor de compactación</p>
+
+<p>Esto permite responder una pregunta clave:</p>
+
+<p>¿Cuánto de lo que el suelo puede hacer, realmente está ocurriendo en el lote?</p>
+
+<h2 id="por-qué-este-enfoque-es-útil">Por qué este enfoque es útil</h2>
+
+<p>Porque evita dos errores comunes.</p>
+
+<h3 id="suelos-buenos-que-rinden-mal">Suelos “buenos” que rinden mal</h3>
+
+<p>Sin considerar compactación, un suelo puede parecer excelente en análisis biológicos, pero fallar en momentos críticos.</p>
+
+<h3 id="intervenciones-innecesarias">Intervenciones innecesarias</h3>
+
+<p>No todo suelo compacto necesita corrección urgente.<br />
+Si el IBS base es bajo, la limitación principal no es física sino biológica.</p>
+
+<p>El IBS funcional permite priorizar decisiones:</p>
+<ul>
+  <li>dónde descompactar,</li>
+  <li>dónde mejorar biología,</li>
+  <li>y dónde no intervenir.</li>
+</ul>
+
+<h2 id="la-compactación-no-destruye-el-suelo-le-pone-un-techo">La compactación no destruye el suelo, le pone un techo</h2>
+
+<p>Este es el mensaje central del enfoque IBS.</p>
+
+<p>La compactación:</p>
+<ul>
+  <li>no elimina microorganismos,</li>
+  <li>no borra la materia orgánica,</li>
+  <li>no cambia el pH.</li>
+</ul>
+
+<p>Pero limita la expresión de todo lo anterior.</p>
+
+<p>Por eso no la tratamos como una variable más, sino como lo que realmente es: un límite funcional al potencial del suelo.</p>]]></content><author><name></name></author><category term="actualidad" /><category term="compactación" /><category term="ibs" /><category term="suelo" /><category term="bioactividad" /><summary type="html"><![CDATA[Compactación: por qué la biología no es suficiente]]></summary></entry><entry><title type="html">El IBS sigue creciendo (y no lo hace solo)</title><link href="https://stndcx.github.io/ibs/blog/2026/06/30/el-ibs-sigue-creciendo/" rel="alternate" type="text/html" title="El IBS sigue creciendo (y no lo hace solo)" /><published>2026-06-30T17:00:00+00:00</published><updated>2026-06-30T17:00:00+00:00</updated><id>https://stndcx.github.io/ibs/blog/2026/06/30/el-ibs-sigue-creciendo</id><content type="html" xml:base="https://stndcx.github.io/ibs/blog/2026/06/30/el-ibs-sigue-creciendo/"><![CDATA[<div class="video-container">
+<iframe src="https://www.youtube.com/embed/fycru1RpHhI?si=zV98cB3dWt--Zega" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen=""></iframe>
+</div>
+
+<h2 id="el-ibs-sigue-creciendo-y-no-lo-hace-solo">El IBS sigue creciendo (y no lo hace solo)</h2>
+
+<p>Una de las ideas centrales del IBS es que no se construye en abstracto ni en soledad. Necesita territorio, personas, pruebas reales y diálogo constante. Por eso nos alegra contar que se sumaron nuevos proyectos y espacios colaboradores.</p>
+
+<p><strong>Reserva Natural Tigre</strong> se incorpora como espacio de experimentación en entorno real. Es el lugar donde el índice deja el papel y empieza a enfrentarse a condiciones concretas, variables reales y aprendizajes de campo.</p>
+
+<p><strong>Comunidad Verde ONG</strong>, vinculada a la reserva, acompaña al IBS como referencia ambiental, aportando contexto, mirada territorial y validación desde la experiencia local.</p>
+
+<p><strong>whatIDO_ – Comunidad IT Argentina</strong> se suma desde el lado tecnológico y comunitario, ampliando el cruce entre sostenibilidad, datos y desarrollo.</p>
+
+<p>Estas incorporaciones refuerzan algo que para nosotros es clave: el IBS es un proyecto abierto, colaborativo y en construcción permanente. Cada nuevo espacio y cada nueva comunidad lo hace más robusto, más real y más útil.</p>
+
+<p>Seguimos probando, ajustando y aprendiendo.
+Gracias a quienes se suman y a quienes ya estaban 💚</p>]]></content><author><name></name></author><category term="actualidad" /><category term="ibs" /><category term="comunidad" /><category term="colaboradores" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Bienvenido al Blog del IBS</title><link href="https://stndcx.github.io/ibs/blog/2026/06/22/bienvenido-al-blog/" rel="alternate" type="text/html" title="Bienvenido al Blog del IBS" /><published>2026-06-22T13:00:00+00:00</published><updated>2026-06-22T13:00:00+00:00</updated><id>https://stndcx.github.io/ibs/blog/2026/06/22/bienvenido-al-blog</id><content type="html" xml:base="https://stndcx.github.io/ibs/blog/2026/06/22/bienvenido-al-blog/"><![CDATA[<h2 id="bienvenide-a-ibs-un-proyecto-abierto-para-aprender-compartir-y-crecer">Bienvenide a IBS: un proyecto abierto para aprender, compartir y crecer</h2>
+
+<p>¡Hola!</p>
+
+<p>Estamos muy felices de presentarte IBS, un proyecto completamente abierto y construido con la idea de compartir conocimiento, herramientas y soluciones con la comunidad.</p>
+
+<h3 id="qué-es-ibs">¿Qué es IBS?</h3>
+
+<p>IBS (sigla que puedes desarrollar según el significado de tu proyecto) nació como una respuesta a una necesidad muy simple: crear un espacio colaborativo para explorar, aprender y mejorar. Aquí no solo documentamos nuestras ideas y avances, sino que también invitamos a cualquier persona interesada a participar, aportar y construir en conjunto.</p>
+
+<p>Este blog será el corazón del proyecto, donde compartiremos:</p>
+
+<ul>
+  <li>Actualizaciones del desarrollo</li>
+  <li>Reflexiones y aprendizajes técnicos</li>
+  <li>Guías, tutoriales y casos de uso</li>
+  <li>Experiencias de colaboración</li>
+</ul>
+
+<h3 id="por-qué-es-abierto">¿Por qué es abierto?</h3>
+
+<p>Creemos firmemente en los proyectos que se construyen de forma colaborativa y transparente. Al mantener IBS abierto:</p>
+
+<ul>
+  <li>Cualquier persona puede aprender de nuestro código y documentación</li>
+  <li>Se pueden sugerir mejoras, nuevas funciones y propuestas</li>
+  <li>Se fomenta un ecosistema de desarrollo más rico y diverso</li>
+</ul>
+
+<p>Aquí no solo mostramos resultados: compartimos el proceso, los desafíos y las soluciones que encontramos en el camino.</p>
+
+<h3 id="cómo-podes-sumarte">¿Cómo podes sumarte?</h3>
+
+<p>Participar es simple:</p>
+
+<ul>
+  <li>Estrella el repositorio en GitHub</li>
+  <li>Clona el proyecto y explorá lo que ya está construido</li>
+  <li>Lee nuestras guías y documentación</li>
+  <li>Haz tus aportes mediante Pull Requests o issues</li>
+  <li>Comparte tus ideas y feedback</li>
+</ul>
+
+<p>La comunidad es lo que hace crecer a un proyecto abierto 🚀</p>
+
+<h3 id="qué-se-viene">¿Qué se viene?</h3>
+
+<p>Este blog será actualizado regularmente con contenido relevante para desarrolladores, curiosos tecnológicos y toda persona interesada en procesos de desarrollo colaborativo.
+Desde análisis técnicos hasta historias del día a día de construir un proyecto real: nos encantaría que formes parte de ello.</p>]]></content><author><name></name></author><category term="actualidad" /><category term="ibs" /><category term="suelo" /><category term="bioactividad" /><summary type="html"><![CDATA[Bienvenide a IBS: un proyecto abierto para aprender, compartir y crecer]]></summary></entry><entry><title type="html">El suelo como eje técnico de la producción agrícola</title><link href="https://stndcx.github.io/ibs/blog/2026/06/22/el-suelo-como-eje-tecnico/" rel="alternate" type="text/html" title="El suelo como eje técnico de la producción agrícola" /><published>2026-06-22T13:00:00+00:00</published><updated>2026-06-22T13:00:00+00:00</updated><id>https://stndcx.github.io/ibs/blog/2026/06/22/el-suelo-como-eje-tecnico</id><content type="html" xml:base="https://stndcx.github.io/ibs/blog/2026/06/22/el-suelo-como-eje-tecnico/"><![CDATA[<h2 id="el-suelo-como-eje-técnico-de-la-producción-agrícola">El suelo como eje técnico de la producción agrícola</h2>
+
+<p>En la agricultura tradicional y orgánica, el suelo constituye el <strong>principal factor de regulación del sistema productivo</strong>. Su estructura física, actividad biológica y capacidad química determinan no solo el rendimiento de los cultivos, sino también la eficiencia en el uso de agua, nutrientes e insumos.</p>
+
+<p>Desde el punto de vista agronómico, un suelo funcional es aquel que mantiene <strong>estabilidad estructural</strong>, adecuada <strong>porosidad</strong>, buen <strong>contenido de materia orgánica</strong> y una <strong>biología activa</strong> capaz de sostener los ciclos de nutrientes. Cuando estos componentes se alteran —por laboreos excesivos, compactación o manejo inadecuado— la productividad se vuelve dependiente de intervenciones externas y pierde resiliencia.</p>
+
+<p>En sistemas tradicionales, el desafío actual no es solo producir más, sino producir sin comprometer <strong>la calidad del suelo</strong>. En la agricultura orgánica, el suelo deja de ser un medio inerte y pasa a ser el principal insumo, donde la microbiología y la materia orgánica cumplen un rol central en la nutrición vegetal.</p>
+
+<p>Ambos enfoques convergen en un punto clave: la <strong>sostenibilidad productiva está directamente ligada a la salud del suelo</strong>. La adopción de prácticas como rotación de cultivos, manejo de residuos, incorporación de enmiendas orgánicas y reducción de disturbios físicos no es una tendencia, sino una necesidad técnica.</p>
+
+<p>Comprender y manejar el suelo como un sistema vivo es, hoy, una de las competencias centrales de la agronomía moderna.</p>]]></content><author><name></name></author><category term="actualidad" /><category term="ibs" /><category term="suelo" /><category term="produccion" /><summary type="html"><![CDATA[El suelo como eje técnico de la producción agrícola]]></summary></entry></feed>

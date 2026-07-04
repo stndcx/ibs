@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IBS - Mapa de Bioactividad del Suelo</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+hr { margin: .6rem 0; border: 0; border-top: 1px solid rgba(255,255,255,.2); }
+#app { height: 100vh; width: 100vw; position: relative; overflow: hidden; }
+
+/* HEADER */
+#header {
+  position: absolute; top: 20px; right: 20px; z-index: 1000;
+  background: #1C3A2A; color: #fff; border-radius: 10px; padding: 12px; width: 195px;
+}
+#header h1 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+#header .sub { font-size: 11px; opacity: .7; margin-top: 3px; }
+.btn_git { text-decoration: none; color: #aaa; font-size: 14px; }
+
+/* CONTROLES */
+#controls {
+  position: absolute; bottom: 50px; left: 20px; z-index: 1000;
+  background: #F5F0E8; border-radius: 10px; padding: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.2); display: grid; gap: 7px; min-width: 155px;
+}
+.ctrl-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+.filter-btn {
+  font-size: 12px; padding: 8px 10px; border-radius: 8px; cursor: pointer;
+  border: 1.5px solid #dee2e6; background: white; color: #495057;
+  transition: all .15s; font-weight: 500; text-align: left;
+}
+.filter-btn:hover { transform: translateX(2px); box-shadow: 0 2px 6px rgba(0,0,0,.1); }
+.filter-btn.active { font-weight: 700; transform: translateX(3px); }
+.filter-btn[data-layer="co2"].active  { background:#FFF3E0; color:#BF360C; border-color:#BF360C; }
+.filter-btn[data-layer="mo"].active   { background:#E8F5E9; color:#1B5E20; border-color:#1B5E20; }
+.filter-btn[data-layer="ph"].active   { background:#E3F2FD; color:#0D47A1; border-color:#0D47A1; }
+.filter-btn[data-layer="temp"].active { background:#FCE4EC; color:#880E4F; border-color:#880E4F; }
+.filter-btn[data-layer="ibs"].active  { background:#EDE7F6; color:#4527A0; border-color:#4527A0; }
+
+.toggle-row { display:flex; align-items:center; justify-content:space-between; font-size:12px; color:#555; }
+.toggle { position:relative; display:inline-block; width:30px; height:16px; }
+.toggle input { opacity:0; width:0; height:0; }
+.slider { position:absolute; cursor:pointer; inset:0; background:#ccc; border-radius:16px; transition:.3s; }
+.slider:before { position:absolute; content:""; height:12px; width:12px; left:2px; bottom:2px; background:#fff; border-radius:50%; transition:.3s; }
+input:checked + .slider { background:#2E7D32; }
+input:checked + .slider:before { transform:translateX(14px); }
+
+#zona-select {
+  width:100%; padding:6px 8px; border-radius:7px;
+  border:1.5px solid #dee2e6; font-size:12px; background:white; color:#495057; cursor:pointer;
+}
+
+/* MAPA */
+#map-container { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+#map { width:100%; height:100%; }
+
+/* LEYENDA */
+#legend {
+  position:absolute; bottom:260px; right:20px; z-index:1000;
+  background:#F5F0E8; padding:12px; width:200px;
+  border-radius:10px; box-shadow:0 4px 20px rgba(0,0,0,.15);
+}
+#legend-title { font-size:11px; font-weight:700; margin-bottom:7px; color:#333; border-bottom:1px solid #ddd; padding-bottom:5px; text-transform:uppercase; letter-spacing:.3px; }
+.leg-section { font-size:10px; color:#aaa; margin:6px 0 3px; text-transform:uppercase; letter-spacing:.4px; }
+.leg-row { display:flex; align-items:center; gap:7px; margin-bottom:3px; font-size:11px; color:#555; }
+.leg-sw { width:13px; height:13px; border-radius:3px; border:1px solid rgba(0,0,0,.1); flex-shrink:0; }
+.leg-sw.circle { border-radius:50%; }
+#legend-note { font-size:10px; color:#bbb; margin-top:5px; }
+
+/* PANEL DATOS */
+#upload-panel {
+  position:absolute; bottom:50px; right:20px; z-index:1000;
+  background:#F5F0E8; border-radius:10px; padding:12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.15); width:200px;
+}
+#upload-panel label { font-size:11px; color:#495057; }
+#github-repo-input { width:100%; padding:6px 8px; border:1px solid #dee2e6; border-radius:6px; margin-top:7px; font-size:11px; }
+#load-github-btn {
+  padding:7px; background:#1C3A2A; color:white; border:none;
+  border-radius:6px; cursor:pointer; font-weight:500; width:100%; margin-top:6px; font-size:12px;
+  transition: background .2s;
+}
+#load-github-btn:hover { background:#2e5a40; }
+#status { font-size:11px; color:#28a745; font-weight:500; margin-top:5px; display:block; }
+#status.error { color:#dc3545; }
+#status.loading { color:#ff9800; }
+.gh-info { font-size:10px; color:#999; margin-top:3px; }
+.gh-info code { background:#e9ecef; padding:1px 4px; border-radius:3px; }
+
+/* POPUPS */
+.popup-content { min-width:200px; font-family:'Segoe UI',sans-serif; }
+.popup-title { font-weight:700; font-size:14px; margin-bottom:6px; color:#1C3A2A; }
+.popup-zona { font-size:11px; color:#999; margin-bottom:7px; }
+.popup-row { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid #f0f0f0; font-size:12px; }
+.popup-label { color:#888; }
+.popup-value { font-weight:600; }
+.popup-ibs { margin-top:8px; padding-top:7px; display:flex; justify-content:space-between; align-items:center; }
+.popup-ibs-value { font-weight:700; font-size:15px; }
+.popup-ibs-badge { padding:3px 9px; border-radius:10px; font-size:11px; font-weight:700; }
+.popup-ref { margin-top:6px; padding-top:6px; border-top:1px dashed #eee; font-size:11px; color:#888; }
+.popup-ref b { color:#444; }
+.popup-coords { margin-top:4px; font-size:10px; color:#ccc; }
+.leaflet-tooltip { font-family:'Segoe UI',sans-serif; font-size:12px; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div id="header">
+    <h1>Bioactividad del Suelo</h1>
+    <div class="sub">Indice IBS - Argentina</div>
+    <hr>
+    <div style="font-size:11px;opacity:.6;margin-bottom:6px">IBS · CO2 · M.O. · pH · Temp</div>
+    <a href="https://github.com/stndcx/ibs" target="_blank" class="btn_git"><i class="bi bi-github"></i> stndcx/ibs</a>
+  </div>
+
+  <div id="controls">
+    <span class="ctrl-label">Indicador</span>
+    <button class="filter-btn active" data-layer="ibs">IBS</button>
+    <button class="filter-btn" data-layer="co2">CO2</button>
+    <button class="filter-btn" data-layer="mo">M.O.</button>
+    <button class="filter-btn" data-layer="ph">pH</button>
+    <button class="filter-btn" data-layer="temp">Temp C</button>
+    <hr style="margin:2px 0;border-color:#ddd">
+    <div class="toggle-row">
+      <span>Referencia nacional</span>
+      <label class="toggle"><input type="checkbox" id="tog-ref" checked><span class="slider"></span></label>
+    </div>
+    <hr style="margin:2px 0;border-color:#ddd">
+    <span class="ctrl-label">Zona</span>
+    <select id="zona-select"><option value="">Todas</option></select>
+  </div>
+
+  <div id="map-container">
+    <div id="map"></div>
+    <div id="legend">
+      <div id="legend-title">IBS</div>
+      <div class="leg-section">Referencia nacional</div>
+      <div id="leg-ref"></div>
+      <div class="leg-section" style="margin-top:8px">Productores</div>
+      <div id="leg-pts"></div>
+      <div id="legend-note"></div>
+    </div>
+  </div>
+
+  <div id="upload-panel">
+    <label>Datos desde GitHub:</label>
+    <input type="text" id="github-repo-input" placeholder="usuario/repo/rama/carpeta" value="stndcx/ibs/main/datos"/>
+    <button id="load-github-btn">Cargar desde GitHub</button>
+    <div>
+      <span id="status">12 puntos de ejemplo</span>
+      <div class="gh-info"><code>.md</code> con frontmatter YAML</div>
+    </div>
+  </div>
+
+</div>
+<script>
+// NOTA
+/*
+
+- Pasar los datos a md y quitar los arrays
+- Separar el html del js y css
+- Mejorar funciones y modularizar
+
+*/
+// ================================================================
+// REFERENCIA NACIONAL (valores de referencia bibliografica)
+// Fuente: Sainz Rozas et al., Informaciones Agronomicas No. 2
+// ================================================================
+const REF_NAC = {
+  mo: {
+    "Buenos Aires": 2.7, "La Pampa": 1.6, "Santa Fe": 2.7,
+    "Cordoba": 2.0, "Entre Rios": 3.4, "Santiago del Estero": 2.5,
+    "Salta": 2.4, "Tucuman": 2.6
+  },
+  ph: {
+    "Buenos Aires": 6.22, "La Pampa": 6.52, "Santa Fe": 6.03,
+    "Cordoba": 6.20, "Entre Rios": 6.34, "Santiago del Estero": 6.80,
+    "Salta": 6.71, "Tucuman": 6.35
+  }
+  // co2 y temp: sin dato de referencia disponible
+};
+
+// ================================================================
+// DATOS DE EJEMPLO
+// ================================================================
+const SAMPLE_DATA = [
+  { id:"Campo El Trebol",     zona:"Cordoba",              lat:-33.45, lon:-63.25, co2:180, mo:3.8, ph:6.2, temp:21 },
+  { id:"Estancia La Pampa",   zona:"La Pampa",             lat:-35.10, lon:-61.80, co2:95,  mo:2.1, ph:7.8, temp:19 },
+  { id:"Cordoba Norte",       zona:"Cordoba",              lat:-31.60, lon:-64.50, co2:230, mo:4.5, ph:6.5, temp:23 },
+  { id:"Santa Fe Sur",        zona:"Santa Fe",             lat:-33.80, lon:-61.40, co2:140, mo:3.2, ph:6.8, temp:20 },
+  { id:"Entre Rios",          zona:"Entre Rios",           lat:-32.50, lon:-58.90, co2:310, mo:5.1, ph:5.9, temp:25 },
+  { id:"Buenos Aires Este",   zona:"Buenos Aires",         lat:-36.20, lon:-58.10, co2:75,  mo:1.8, ph:8.1, temp:17 },
+  { id:"La Pampa Centro",     zona:"La Pampa",             lat:-37.50, lon:-65.30, co2:55,  mo:1.4, ph:7.5, temp:18 },
+  { id:"Mendoza Sur",         zona:"Mendoza",              lat:-35.80, lon:-68.20, co2:120, mo:2.6, ph:7.0, temp:24 },
+  { id:"Santiago del Estero", zona:"Santiago del Estero",  lat:-28.50, lon:-63.70, co2:200, mo:2.9, ph:6.3, temp:28 },
+  { id:"Tucuman Norte",       zona:"Tucuman",              lat:-26.90, lon:-65.40, co2:260, mo:4.2, ph:6.1, temp:27 },
+  { id:"Chaco Este",          zona:"Chaco",                lat:-27.40, lon:-59.80, co2:290, mo:4.8, ph:6.4, temp:30 },
+  { id:"Buenos Aires Norte",  zona:"Buenos Aires",         lat:-34.20, lon:-59.70, co2:160, mo:3.5, ph:6.7, temp:20 }
+];
+
+// ================================================================
+// CONFIG
+// ================================================================
+const RANGES = {
+  co2:  { min:30,  max:600, unit:"mg/kg/d", label:"CO2" },
+  mo:   { min:0.3, max:6.0, unit:"%",       label:"M.O." },
+  ph:   { min:4.5, max:9.0, unit:"",        label:"pH" },
+  temp: { min:5,   max:40,  unit:"C",       label:"Temperatura" },
+  ibs:  { min:0,   max:100, unit:"",        label:"IBS" }
+};
+const PALETTES = {
+  co2:  ["#FFF9C4","#FFE082","#FFB300","#E65100","#BF360C"],
+  mo:   ["#F1F8E9","#AED581","#558B2F","#2E7D32","#1B5E20"],
+  ph:   ["#E3F2FD","#64B5F6","#1565C0","#0D47A1","#01579B"],
+  temp: ["#FFF8E1","#FFCC80","#FF7043","#D32F2F","#880E4F"],
+  ibs:  ["#EF5350","#FF9800","#FFEE58","#66BB6A","#7B1FA2"]
+};
+const IBS_LEVELS = [
+  { max:30,  color:"#EF5350", label:"Critico 0-30",    bg:"#FFEBEE" },
+  { max:50,  color:"#FF9800", label:"Bajo 31-50",      bg:"#FFF3E0" },
+  { max:70,  color:"#FFEE58", label:"Moderado 51-70",  bg:"#FFFDE7" },
+  { max:85,  color:"#66BB6A", label:"Bueno 71-85",     bg:"#E8F5E9" },
+  { max:100, color:"#7B1FA2", label:"Excelente 86-100",bg:"#EDE7F6" }
+];
+
+// ================================================================
+// CALCULO
+// ================================================================
+function calcIBS(d) {
+  const co2_n = Math.min(1, Math.max(0, (d.co2-30)/(600-30)));
+  const mo_n  = Math.min(1, Math.max(0, (d.mo-0.3)/(6.0-0.3)));
+  const ph_s  = Math.exp(-0.5*Math.pow((d.ph-6.5)/1.2,2));
+  const t_s   = Math.exp(-0.5*Math.pow((d.temp-22.0)/8.0,2));
+  return Math.min(100,Math.max(0,Math.round((co2_n*.4+mo_n*.3+ph_s*.2+t_s*.1)*1000)/10));
+}
+function colorFor(value, layer) {
+  if (layer==="ibs") { for (const c of IBS_LEVELS) if (value<=c.max) return c.color; return IBS_LEVELS[4].color; }
+  const {min,max}=RANGES[layer];
+  const norm=Math.min(1,Math.max(0,(value-min)/(max-min)));
+  return PALETTES[layer][Math.min(PALETTES[layer].length-1,Math.floor(norm*PALETTES[layer].length))];
+}
+function ibsMeta(v) { for (const c of IBS_LEVELS) if (v<=c.max) return c; return IBS_LEVELS[4]; }
+
+function normNombre(n) {
+  return n.normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/^Provincia (de|del) /i,"").trim();
+}
+
+// ================================================================
+// ESTADO GLOBAL
+// ================================================================
+let map, markers=[], currentData=[], currentLayer="ibs";
+let refLayer=null, mostrarRef=true, dataSource='ejemplo';
+
+// ================================================================
+// CAPA DE REFERENCIA — poligonos de provincia
+// ================================================================
+async function cargarRefProvincias(layer) {
+  if (refLayer) { map.removeLayer(refLayer); refLayer=null; }
+  if (!mostrarRef) return;
+
+  const ref = REF_NAC[layer];
+
+  try {
+    const res = await fetch("https://apis.datos.gob.ar/georef/api/provincias?formato=geojson&max=25");
+    if (!res.ok) throw new Error("no disponible");
+    const geo = await res.json();
+
+    refLayer = L.geoJSON(geo, {
+      style: feat => {
+        const nombre = normNombre(feat.properties.nombre);
+        const val = ref ? ref[nombre] : null;
+        return {
+          fillColor: val!=null ? colorFor(val, layer) : "#e0e0e0",
+          fillOpacity: val!=null ? 0.50 : 0.08,
+          color: "#999",
+          weight: 0.8
+        };
+      },
+      onEachFeature: (feat, lyr) => {
+        const nombre  = normNombre(feat.properties.nombre);
+        const val     = ref ? ref[nombre] : null;
+        const display = feat.properties.nombre;
+        const u       = RANGES[layer].unit ? " "+RANGES[layer].unit : "";
+        const tip = val!=null
+          ? `<b>${display}</b><br>${RANGES[layer].label}: <b>${val}${u}</b><br><span style="color:#aaa;font-size:10px">Referencia nacional</span>`
+          : `<b>${display}</b><br><span style="color:#bbb;font-size:10px">Sin referencia para ${RANGES[layer].label}</span>`;
+        lyr.bindTooltip(tip, {sticky:true, opacity:.92});
+      }
+    }).addTo(map);
+
+    refLayer.bringToBack();
+  } catch(e) {
+    console.warn("GeoJSON provincias no disponible:", e.message);
+  }
+}
+
+// ================================================================
+// INIT
+// ================================================================
+window.addEventListener("load", () => {
+  map = L.map("map", {preferCanvas:true}).setView([-34.5,-63.5], 5);
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution:'&copy; OSM &copy; CARTO', maxZoom:19
+  }).addTo(map);
+
+  currentData = SAMPLE_DATA;
+  cargarRefProvincias(currentLayer);
+  renderMarkers(currentData, currentLayer);
+  updateZonaFilter(currentData);
+
+  // Filtros indicador
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      currentLayer = btn.dataset.layer;
+      cargarRefProvincias(currentLayer);
+      renderMarkers(currentData, currentLayer);
+    });
+  });
+
+  // Toggle referencia
+  document.getElementById("tog-ref").addEventListener("change", e => {
+    mostrarRef = e.target.checked;
+    cargarRefProvincias(currentLayer);
+  });
+
+  // Filtro zona
+  document.getElementById("zona-select").addEventListener("change", () => {
+    renderMarkers(currentData, currentLayer);
+  });
+
+  // GitHub
+  document.getElementById("load-github-btn").addEventListener("click", async () => {
+    const path = document.getElementById("github-repo-input").value.trim();
+    if (!path) { setStatus("Ingresa la ruta del repositorio","error"); return; }
+    const data = await loadFromGitHub(path);
+    if (data && data.length>0) {
+      currentData=data; dataSource='github';
+      updateZonaFilter(data);
+      renderMarkers(currentData, currentLayer);
+    }
+  });
+  document.getElementById("github-repo-input").addEventListener("keypress", e => {
+    if (e.key==="Enter") document.getElementById("load-github-btn").click();
+  });
+});
+
+// ================================================================
+// FILTRO ZONA
+// ================================================================
+function updateZonaFilter(data) {
+  const sel = document.getElementById("zona-select");
+  const zonas = [...new Set(data.map(d=>d.zona).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">Todas</option>' +
+    zonas.map(z=>`<option value="${z}">${z}</option>`).join("");
+}
+
+// ================================================================
+// RENDER MARKERS (circulos productores)
+// ================================================================
+function renderMarkers(data, layer) {
+  markers.forEach(m=>map.removeLayer(m));
+  markers=[];
+
+  const zonaActiva = document.getElementById("zona-select")?.value;
+  const datos = zonaActiva ? data.filter(d=>d.zona===zonaActiva) : data;
+
+  if (!datos || datos.length===0) {
+    setStatus("Sin datos para mostrar","error");
+    updateLegend(layer); return;
+  }
+
+  datos.forEach(d => {
+    if (!d.lat||!d.lon||isNaN(d.lat)||isNaN(d.lon)) return;
+
+    const ibs   = calcIBS(d);
+    const val   = layer==="ibs" ? ibs : d[layer];
+    const color = colorFor(val, layer);
+    const meta  = ibsMeta(ibs);
+
+    // Comparativa con referencia nacional
+    const zonaNorm = normNombre(d.zona||"");
+    const refVal   = REF_NAC[layer]?.[zonaNorm];
+    const u        = RANGES[layer].unit ? " "+RANGES[layer].unit : "";
+    const refHtml  = refVal!=null
+      ? `<div class="popup-ref">Ref. nacional: <b>${refVal}${u}</b> &nbsp;·&nbsp; Diferencia: <b style="color:${val>=refVal?'#2E7D32':'#c62828'}">${val>=refVal?'+':''}${(val-refVal).toFixed(2)}</b></div>`
+      : '';
+
+    const m = L.circleMarker([d.lat,d.lon], {
+      radius:11, fillColor:color, color:"#fff", weight:2.5, fillOpacity:.92
+    });
+
+    m.bindPopup(`
+      <div class="popup-content">
+        <div class="popup-title">${d.id||"Sin nombre"}</div>
+        ${d.zona?`<div class="popup-zona">${d.zona}</div>`:''}
+        <div class="popup-row"><span class="popup-label">CO2</span><span class="popup-value">${d.co2} mg/kg/d</span></div>
+        <div class="popup-row"><span class="popup-label">M.O.</span><span class="popup-value">${d.mo}%</span></div>
+        <div class="popup-row"><span class="popup-label">pH</span><span class="popup-value">${d.ph}</span></div>
+        <div class="popup-row"><span class="popup-label">Temperatura</span><span class="popup-value">${d.temp} C</span></div>
+        <div class="popup-ibs">
+          <span class="popup-ibs-value">IBS: ${ibs}</span>
+          <span class="popup-ibs-badge" style="background:${meta.bg};color:${meta.color}">${meta.label.split(" ")[0]}</span>
+        </div>
+        ${refHtml}
+        <div class="popup-coords">${d.lat.toFixed(4)}, ${d.lon.toFixed(4)}</div>
+      </div>`, {maxWidth:280});
+
+    m.addTo(map);
+    markers.push(m);
+  });
+
+  updateLegend(layer);
+  setStatus(`${datos.length} de ${data.length} puntos${dataSource==='github'?' (GitHub)':''}`, '');
+  if (markers.length>0) map.fitBounds(L.featureGroup(markers).getBounds().pad(.1));
+}
+
+// ================================================================
+// LEYENDA
+// ================================================================
+function updateLegend(layer) {
+  document.getElementById("legend-title").textContent = RANGES[layer].label;
+  const hasRef = REF_NAC[layer]!=null;
+  const u = RANGES[layer].unit ? " "+RANGES[layer].unit : "";
+  const pal = PALETTES[layer];
+  const {min,max} = RANGES[layer];
+
+  // Referencia nacional (poligonos = cuadrados en leyenda)
+  const refEl = document.getElementById("leg-ref");
+  if (!hasRef) {
+    refEl.innerHTML = `<div style="font-size:11px;color:#ccc;font-style:italic">Sin dato para este indicador</div>`;
+    document.getElementById("legend-note").textContent="";
+  } else {
+    refEl.innerHTML = pal.map((c,i)=>{
+      const lo=(min+(max-min)*i/pal.length).toFixed(1);
+      const hi=(min+(max-min)*(i+1)/pal.length).toFixed(1);
+      return `<div class="leg-row"><div class="leg-sw" style="background:${c};opacity:.8"></div><span>${lo} – ${hi}${u}</span></div>`;
+    }).join("");
+    document.getElementById("legend-note").textContent="Ref.: Sainz Rozas et al.";
+  }
+
+  // Productores (circulos)
+  const ptsEl = document.getElementById("leg-pts");
+  if (layer==="ibs") {
+    ptsEl.innerHTML = IBS_LEVELS.map(c=>
+      `<div class="leg-row"><div class="leg-sw circle" style="background:${c.color}"></div><span>${c.label}</span></div>`
+    ).join("");
+  } else {
+    ptsEl.innerHTML = pal.map((c,i)=>{
+      const lo=(min+(max-min)*i/pal.length).toFixed(1);
+      const hi=(min+(max-min)*(i+1)/pal.length).toFixed(1);
+      return `<div class="leg-row"><div class="leg-sw circle" style="background:${c}"></div><span>${lo} – ${hi}${u}</span></div>`;
+    }).join("");
+  }
+}
+
+// ================================================================
+// GITHUB
+// ================================================================
+function parseMD(txt) {
+  const out=[]; const re=/---\s*\n([\s\S]*?)\n---/g; let m;
+  while((m=re.exec(txt))!==null){
+    const e={};
+    for(const ln of m[1].split('\n')){
+      const t=ln.trim(); if(!t||t[0]==='#') continue;
+      const ci=t.indexOf(':'); if(ci<0) continue;
+      const k=t.slice(0,ci).trim(); let v=t.slice(ci+1).trim();
+      if(!isNaN(v)&&v!=='') v=parseFloat(v);
+      e[k]=v;
+    }
+    if(e.id&&e.lat&&e.lon&&e.co2!==undefined&&e.mo!==undefined&&e.ph!==undefined&&e.temp!==undefined)
+      out.push(e);
+  }
+  return out;
+}
+
+async function loadFromGitHub(path) {
+  try {
+    setStatus("Cargando...","loading");
+    const parts=path.split('/').filter(p=>p);
+    if(parts.length<3) throw new Error("Formato: usuario/repo/rama/carpeta");
+    const [user,repo,branch,...rest]=parts;
+    const res=await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${rest.join('/')}?ref=${branch}`);
+    if(!res.ok) throw new Error("GitHub "+res.status);
+    const files=await res.json();
+    const mds=files.filter(f=>f.name.endsWith('.md'));
+    if(!mds.length) throw new Error("Sin archivos .md en esa carpeta");
+    let all=[];
+    for(const f of mds){ const r=await fetch(f.download_url); if(r.ok) all=all.concat(parseMD(await r.text())); }
+    if(!all.length) throw new Error("Sin datos validos");
+    setStatus(all.length+" puntos cargados",'');
+    return all;
+  } catch(e){ setStatus("Error: "+e.message,"error"); return null; }
+}
+
+function setStatus(msg,cls) {
+  const el=document.getElementById("status");
+  el.textContent=msg; el.className=cls||'';
+}
+
+</script>
+</body>
+</html>

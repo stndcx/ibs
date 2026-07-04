@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBS — Índice de Bioactividad del Suelo</title>
+    
+    <!-- Enlace al CSS (usando baseurl) -->
+    <link rel="stylesheet" href="/ibs/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <!-- Metaetiquetas para SEO y redes sociales -->
+    <meta name="description" content="Marco abierto para la evaluación rápida de la actividad microbiana">
+    <link rel="canonical" href="https://stndcx.github.io/ibs/blog/2026/07/02/compactacion-por-que-la-biologia-no-es-suficiente/">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Cabecera del sitio -->
+    <nav>
+      <a href="/ibs/" class="nav_logo">IBS</a>
+      <ul class="nav_links">
+        <li><a href="/ibs/#formula">Fórmula</a></li>
+        <li><a href="/ibs/#estados">Estados</a></li>
+        <li><a href="/ibs/#modelo">Modelo ML</a></li>
+        <li><a href="/ibs/#integraciones">Integraciones</a></li>
+        <li><a href="/ibs/blog/">Blog</a></li>
+        <li><a href="https://github.com/stndcx/ibs" target="_blank"><i class="bi bi-github"></i> GitHub →</a></li>
+      </ul>
+    </nav>
+
+    <!-- Contenido principal -->
+
+    <article class="post">
+    <header class="post-header">
+        <h1 class="post-title">Compactación: por qué la biología no es suficiente</h1>
+        <p class="post-meta">
+            <i class="bi bi-calendar3"></i>
+            <time datetime="2026-07-02T13:00:00+00:00">
+                02 de July de 2026
+            </time>
+            
+                <i class="bi bi-tags"></i>
+                <span>Categorías: actualidad</span>
+            
+            
+        </p>
+    </header>
+
+    <div class="post-content">
+        <h1 id="compactación-por-qué-la-biología-no-es-suficiente">Compactación: por qué la biología no es suficiente</h1>
+
+<p>Durante años, la compactación fue tratada como un problema estrictamente físico: tránsito excesivo, maquinaria pesada, pisoteo.<br />
+Sin embargo, en sistemas productivos reales, la compactación no actúa sola ni de manera aislada. Su verdadero impacto aparece cuando limita la capacidad del suelo para expresar su potencial biológico.</p>
+
+<p>Un suelo puede mostrar buena actividad microbiana, niveles adecuados de materia orgánica y condiciones químicas aceptables, pero aun así fallar en sostener el cultivo.<br />
+En muchos casos, la razón es simple: las raíces no pueden crecer.</p>
+
+<h2 id="qué-entendemos-por-compactación">Qué entendemos por compactación</h2>
+
+<p>La compactación del suelo es el aumento de la resistencia mecánica que enfrenta una raíz al intentar crecer y explorar el perfil.<br />
+Se expresa comúnmente como resistencia a la penetración, medida en kilopascales (kPa).</p>
+
+<p>Desde el punto de vista funcional:</p>
+
+<ul>
+  <li>A valores bajos, las raíces crecen sin restricciones.</li>
+  <li>A medida que la resistencia aumenta, el crecimiento radicular se vuelve más lento, superficial o directamente se detiene.</li>
+  <li>Cuando la raíz no explora el suelo, el cultivo no accede al agua ni a los nutrientes, aunque estos estén presentes.</li>
+</ul>
+
+<p>La compactación, entonces, no elimina recursos: impide que el cultivo los use.</p>
+
+<h2 id="por-qué-no-la-incorporamos-como-un-parámetro-más">Por qué no la incorporamos como un parámetro más</h2>
+
+<p>El IBS nace como un índice biológico, enfocado en procesos vivos:</p>
+<ul>
+  <li>respiración microbiana,</li>
+  <li>materia orgánica,</li>
+  <li>condiciones químicas y térmicas favorables.</li>
+</ul>
+
+<p>Agregar la compactación como una variable más dentro de la fórmula principal habría mezclado causas con limitantes.</p>
+
+<p>Por eso tomamos una decisión conceptual clara:</p>
+
+<blockquote>
+  <p>La compactación no define el potencial del suelo, define el límite para expresarlo.</p>
+</blockquote>
+
+<h2 id="el-criterio-ibs-potencial-vs-funcionalidad">El criterio IBS: potencial vs. funcionalidad</h2>
+
+<p>En el enfoque IBS distinguimos dos niveles.</p>
+
+<h3 id="ibs-base--potencial-biológico">IBS base — Potencial biológico</h3>
+
+<p>Refleja qué tan activo, equilibrado y favorable es el suelo desde el punto de vista biológico, sin considerar restricciones físicas.</p>
+
+<p>Es lo que el suelo podría ofrecer.</p>
+
+<h3 id="ibs-funcional--desempeño-real">IBS funcional — Desempeño real</h3>
+
+<p>Ajusta ese potencial según la resistencia mecánica que enfrentan las raíces.</p>
+
+<p>Es lo que el suelo realmente puede entregar en ese ambiente.</p>
+
+<p>La compactación actúa entonces como un factor reductor, no como un componente estructural del índice.</p>
+
+<h2 id="cómo-traducimos-la-compactación-en-pérdida-funcional">Cómo traducimos la compactación en pérdida funcional</h2>
+
+<p>La relación entre resistencia a la penetración y crecimiento radicular no es lineal.</p>
+
+<ul>
+  <li>Aumentos pequeños a valores bajos casi no afectan.</li>
+  <li>Cerca de un umbral crítico, pequeñas variaciones generan grandes pérdidas.</li>
+  <li>A valores altos, el sistema ya está colapsado.</li>
+</ul>
+
+<p>Por eso utilizamos una función logística (sigmoide), que permite representar esa transición progresiva:</p>
+
+<ul>
+  <li>Zona sin limitación</li>
+  <li>Zona de restricción creciente</li>
+  <li>Zona de restricción severa</li>
+</ul>
+
+<p>El resultado es un Factor de Compactación entre 0 y 1.</p>
+
+<h2 id="qué-significa-el-factor-de-compactación">Qué significa el Factor de Compactación</h2>
+
+<p>El factor expresa qué proporción del potencial del suelo sigue siendo accesible para el cultivo.</p>
+
+<ul>
+  <li>
+    <p>Factor = 1<br />
+La compactación no limita el crecimiento radicular.</p>
+  </li>
+  <li>
+    <p>Factor = 0.7<br />
+Aproximadamente un 30% del potencial productivo queda inaccesible.</p>
+  </li>
+  <li>
+    <p>Factor = 0.4<br />
+La limitación es severa, aun si la biología es buena.</p>
+  </li>
+</ul>
+
+<p>Este factor no castiga al suelo; describe una realidad física.</p>
+
+<h2 id="de-ibs-base-a-ibs-funcional">De IBS base a IBS funcional</h2>
+
+<p>El IBS funcional surge de aplicar ese factor al índice biológico:</p>
+
+<p>IBS funcional = IBS base × Factor de compactación</p>
+
+<p>Esto permite responder una pregunta clave:</p>
+
+<p>¿Cuánto de lo que el suelo puede hacer, realmente está ocurriendo en el lote?</p>
+
+<h2 id="por-qué-este-enfoque-es-útil">Por qué este enfoque es útil</h2>
+
+<p>Porque evita dos errores comunes.</p>
+
+<h3 id="suelos-buenos-que-rinden-mal">Suelos “buenos” que rinden mal</h3>
+
+<p>Sin considerar compactación, un suelo puede parecer excelente en análisis biológicos, pero fallar en momentos críticos.</p>
+
+<h3 id="intervenciones-innecesarias">Intervenciones innecesarias</h3>
+
+<p>No todo suelo compacto necesita corrección urgente.<br />
+Si el IBS base es bajo, la limitación principal no es física sino biológica.</p>
+
+<p>El IBS funcional permite priorizar decisiones:</p>
+<ul>
+  <li>dónde descompactar,</li>
+  <li>dónde mejorar biología,</li>
+  <li>y dónde no intervenir.</li>
+</ul>
+
+<h2 id="la-compactación-no-destruye-el-suelo-le-pone-un-techo">La compactación no destruye el suelo, le pone un techo</h2>
+
+<p>Este es el mensaje central del enfoque IBS.</p>
+
+<p>La compactación:</p>
+<ul>
+  <li>no elimina microorganismos,</li>
+  <li>no borra la materia orgánica,</li>
+  <li>no cambia el pH.</li>
+</ul>
+
+<p>Pero limita la expresión de todo lo anterior.</p>
+
+<p>Por eso no la tratamos como una variable más, sino como lo que realmente es: un límite funcional al potencial del suelo.</p>
+
+    </div>
+
+    <footer class="post-footer">
+        <div class="post-tags">
+            
+                <i class="bi bi-tag"></i>
+                
+                    <span class="tag">compactación</span>
+                
+                    <span class="tag">ibs</span>
+                
+                    <span class="tag">suelo</span>
+                
+                    <span class="tag">bioactividad</span>
+                
+            
+        </div>
+        <a href="/ibs/blog/" class="btn">
+            <i class="bi bi-arrow-left"></i> Volver al blog
+        </a>
+    </footer>
+</article>
+
+
+    <!-- Pie de página -->
+    <footer>
+      <p>
+        IBS — Índice de Bioactividad del Suelo ·
+        <a href="https://github.com/stndcx/ibs"><i class="bi bi-github"></i> GitHub</a> ·
+        Licencia MIT · Argentina
+      </p>
+    </footer>
+
+<!-- LÓGICA DEMO INTERACTIVA -->
+<script>
+function ibs_calcular(co2, mo, ph, temp) {
+  const co2_norm = Math.max(0, Math.min(1, (co2 - 30)  / (600 - 30)));
+  const mo_norm = Math.max(0, Math.min(1, (mo - 0.3) / (6.0 - 0.3)));
+  const ph_score = Math.exp(-0.5 * Math.pow((ph - 6.5) / 1.2, 2));
+  const temp_score = Math.exp(-0.5 * Math.pow((temp - 22.0) / 8.0, 2));
+  return Math.round(((co2_norm * 0.40) + (mo_norm * 0.30) + (ph_score * 0.20) + (temp_score * 0.10)) * 1000) / 10;
+}
+
+const estados = [
+  { max: 30, label: 'CRÍTICO', color: '#EF4444', desc: 'Enmienda orgánica urgente. Suspender toda labranza.' },
+  { max: 50, label: 'BAJO', color: '#F97316', desc: 'Incorporar compost. Rotación de cultivos.' },
+  { max: 70, label: 'MODERADO', color: '#CA8A04', desc: 'Aplicar bioestimulante liviano. Remonitorear en 90 días.' },
+  { max: 85, label: 'BUENO', color: '#16A34A', desc: 'Mantener el manejo actual. Muestra anual.' },
+  { max: 100, label: 'EXCELENTE',color: '#2563EB', desc: 'No intervenir. Documentar como caso de referencia.' },
+];
+
+function asignar_estado(ibs) {
+  return estados.find(e => ibs <= e.max) || estados[estados.length - 1];
+}
+
+function actualizar() {
+  const co2 = parseFloat(document.getElementById('sl_co2').value);
+  const mo = parseFloat(document.getElementById('sl_mo').value);
+  const ph = parseFloat(document.getElementById('sl_ph').value);
+  const temp = parseFloat(document.getElementById('sl_temp').value);
+
+  document.getElementById('val_co2').textContent = co2;
+  document.getElementById('val_mo').textContent = mo.toFixed(1);
+  document.getElementById('val_ph').textContent = ph.toFixed(1);
+  document.getElementById('val_temp').textContent = temp;
+
+  const ibs    = ibs_calcular(co2, mo, ph, temp);
+  const estado = asignar_estado(ibs);
+
+  document.getElementById('demo_numero').textContent = ibs.toFixed(1);
+  document.getElementById('demo_numero').style.color = estado.color;
+  document.getElementById('demo_estado').textContent = estado.label;
+  document.getElementById('demo_estado').style.color = estado.color;
+  document.getElementById('demo_barra').style.width = ibs + '%';
+  document.getElementById('demo_barra').style.background = estado.color;
+  document.getElementById('demo_desc').textContent = estado.desc;
+}
+
+['sl_co2','sl_mo','sl_ph','sl_temp'].forEach(id => {
+  document.getElementById(id).addEventListener('input', actualizar);
+});
+
+actualizar();
+</script>
+
+</body>
+</html>
