@@ -14,7 +14,10 @@ concreto del lote.
 
 Las acciones activas se recalculan en vivo al mover los sliders. Cada una
 muestra qué va a hacer Golondrina, cuándo, y una vista previa del aviso. Los
-canales (WhatsApp, Calendario, Mail) se conectan con un clic.
+canales (WhatsApp, Calendario, Mail) se conectan con un clic, y al conectar
+uno se envía en el acto lo que estaba esperando por él ("Conectar WhatsApp y
+activar" → "Enviando por WhatsApp…" → aviso entregado). Si el canal ya estaba
+conectado, la acción se envía directo.
 
 **Es todo simulado en el navegador**: no hay backend, no se conecta a cuentas
 reales y no se manda nada. No cambia la fórmula ni la demo existente.

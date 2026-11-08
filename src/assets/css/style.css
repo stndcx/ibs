@@ -1088,8 +1088,8 @@ footer a:hover { color: var(--blanco); }
 .golondrina_cuando { font-family: var(--f-mono); font-size: 0.78rem; color: var(--musgo); margin-top: 0.25rem; }
 .golondrina_quitar { background: none; border: 0; cursor: pointer; color: var(--niebla); padding: 0.1rem; }
 .golondrina_quitar:hover { color: var(--carbon); }
-.golondrina_falta { margin-top: 0.5rem; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 600; color: #B45309; }
-.golondrina_falta:hover { text-decoration: underline; }
+.golondrina_falta { display: inline-block; margin-top: 0.5rem; padding: 0.4rem 0.9rem; border: 0; border-radius: var(--radio); cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 600; background: var(--tierra); color: var(--arena); }
+.golondrina_falta:hover { background: var(--musgo); }
 .golondrina_canales { display: grid; gap: 0.5rem; }
 .golondrina_canal { display: flex; align-items: center; gap: 0.8rem; padding: 0.6rem 0.75rem; border: 1px solid rgba(0,0,0,0.08); border-radius: 10px; }
 .golondrina_canal_icono { width: 34px; height: 34px; flex-shrink: 0; display: grid; place-items: center; border-radius: 8px; background: #E3F1E8; color: var(--musgo); }
@@ -1103,3 +1103,9 @@ footer a:hover { color: var(--blanco); }
   .golondrina { padding: 1.1rem; }
   .golondrina_acciones { grid-template-columns: 1fr; }
 }
+.golondrina_enviado { display: inline-flex; gap: 0.3rem; align-items: center; margin-top: 0.5rem; padding: 0.25rem 0.7rem; border-radius: var(--radio); background: #E3F1E8; color: var(--musgo); font-size: 0.8rem; font-weight: 600; }
+.golondrina_aviso_ok { display: flex; justify-content: flex-end; gap: 0.25rem; font-size: 0.72rem; font-weight: 600; color: #047857; margin-top: 0.2rem; }
+.golondrina_enviando { display: flex; gap: 0.5rem; align-items: center; font-size: 0.82rem; font-weight: 600; color: var(--musgo); margin-bottom: 1rem; }
+.golondrina_enviando span { width: 8px; height: 8px; border-radius: 50%; background: var(--musgo); animation: golondrina_pulso 0.8s ease-in-out infinite; }
+@keyframes golondrina_pulso { 50% { opacity: 0.3; } }
+@media (prefers-reduced-motion: reduce) { .golondrina_enviando span { animation: none; } }

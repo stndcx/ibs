@@ -42,6 +42,19 @@
   const canales = { whatsapp: false, calendario: false, mail: false };
   let activas = []; // ids, la última activada primero
   let timer = null;
+  let mostrado = null;   // qué aviso se ve en el celular
+  let fase = 'oculto';   // 'oculto' | 'enviando' | 'visible'
+  const canalDe = (id) => ACCIONES.find((a) => a.id === id).canal;
+  const nombreCanal = (id) => CANALES.find((c) => c.id === id).nombre;
+
+  /** Estado de envío: depende sólo de si el canal de la acción está conectado. */
+  function envio(id, r) {
+    const c = canalDe(id);
+    if (!canales[c]) return null;
+    if (r.cuando === 'Ahora') return 'Enviado por ' + nombreCanal(c);
+    if (c === 'calendario') return 'Agendado en tu Calendario';
+    return 'Activado: te llega por ' + nombreCanal(c);
+  }
 
   function ejecutarAccion(id) {
     const valor = ibs.toFixed(1);
@@ -107,29 +120,58 @@
       const r = ejecutarAccion(id);
       const a = ACCIONES.find((x) => x.id === id);
       const c = CANALES.find((x) => x.id === a.canal);
+      const est = envio(id, r);
       return `<li class="golondrina_regla">
         <div class="golondrina_regla_top"><strong>${esc(r.regla)}</strong>
           <button type="button" class="golondrina_quitar" data-quitar="${id}" aria-label="Quitar: ${esc(r.regla)}"><i class="bi bi-x-lg" aria-hidden="true"></i></button></div>
         <p class="golondrina_cuando"><i class="bi bi-clock" aria-hidden="true"></i> ${esc(r.cuando)}</p>
         <ul>${r.detalle.map((d) => `<li>${esc(d)}</li>`).join('')}</ul>
-        ${canales[a.canal] ? '' : `<button type="button" class="golondrina_falta" data-canal="${c.id}">Conectar ${c.nombre} para que te llegue →</button>`}
+        ${canales[a.canal]
+          ? `<p class="golondrina_enviado"><i class="bi bi-check2" aria-hidden="true"></i> ${esc(est)}</p>`
+          : `<button type="button" class="golondrina_falta" data-canal="${c.id}" data-para="${id}">Conectar ${c.nombre} y ${r.cuando === 'Ahora' ? 'enviar' : 'activar'}</button>`}
       </li>`;
     }).join('');
   }
 
   function renderAviso(animar) {
     const cont = $('[data-g="aviso"]');
-    if (!activas.length) { cont.innerHTML = ''; return; }
-    const id = activas[0];
+    const id = activas.includes(mostrado) ? mostrado : null;
+    if (!id || fase === 'oculto') { cont.innerHTML = ''; return; }
     const r = ejecutarAccion(id);
-    const a = ACCIONES.find((x) => x.id === id);
-    const canal = canales[a.canal] ? CANALES.find((x) => x.id === a.canal).nombre : null;
+    const canal = canales[canalDe(id)] ? nombreCanal(canalDe(id)) : null;
+    if (fase === 'enviando') {
+      cont.innerHTML = `<p class="golondrina_enviando"><span aria-hidden="true"></span>Enviando por ${canal}…</p>`;
+      return;
+    }
+    const est = envio(id, r);
     const cuando = r.cuando === 'Ahora' || r.cuando.startsWith('Apenas') ? 'ahora' : 'programado';
-    cont.innerHTML = `<p class="golondrina_aviso_label">Así te va a llegar ${canal ? 'por ' + canal : 'al celular'}:</p>
+    const label = est
+      ? `${est}. ${r.cuando === 'Ahora' ? 'Así te llegó:' : 'Así te va a llegar:'}`
+      : 'Así te va a llegar al celular (conectá el canal para recibirlo):';
+    cont.innerHTML = `<p class="golondrina_aviso_label">${esc(label)}</p>
       <div class="golondrina_aviso${animar ? ' golondrina_aviso--entra' : ''}">
         <svg class="golondrina_logo golondrina_logo--chico" aria-hidden="true"><use href="#golondrina-logo"/></svg>
         <div><p class="golondrina_aviso_head"><span>Golondrina${canal ? ' · ' + canal : ''}</span><span>${cuando}</span></p>
-        <p class="golondrina_aviso_msg">${esc(r.aviso)}</p></div></div>`;
+        <p class="golondrina_aviso_msg">${esc(r.aviso)}</p>
+        ${est ? `<p class="golondrina_aviso_ok"><i class="bi bi-check2" aria-hidden="true"></i> ${r.cuando === 'Ahora' ? 'Entregado' : 'Activado'}</p>` : ''}</div></div>`;
+  }
+
+  /** Muestra el aviso de `id`; con `enviando`, antes pasa por "Enviando por …". */
+  function mostrarAviso(id, enviando) {
+    mostrado = id;
+    fase = enviando ? 'enviando' : 'oculto';
+    renderAviso(false);
+    clearTimeout(timer);
+    timer = setTimeout(() => { fase = 'visible'; renderAviso(true); }, enviando ? 900 : 700);
+  }
+
+  /** Conectar un canal manda en el acto lo que estaba esperando por él. */
+  function alternarCanal(id, pendiente) {
+    canales[id] = !canales[id];
+    renderCanales(); renderResultados();
+    if (!canales[id]) { renderAviso(false); return; }
+    const pend = pendiente || activas.find((x) => canalDe(x) === id);
+    if (pend) mostrarAviso(pend, true); else renderAviso(false);
   }
 
   function renderCanales() {
@@ -144,9 +186,8 @@
     activas = [id, ...activas.filter((x) => x !== id)];
     renderAcciones();
     renderResultados();
-    $('[data-g="aviso"]').innerHTML = '';
-    clearTimeout(timer);
-    timer = setTimeout(() => renderAviso(true), 700);
+    // Con el canal ya conectado se envía directo.
+    mostrarAviso(id, canales[canalDe(id)]);
   }
 
   raiz.addEventListener('click', (e) => {
@@ -157,8 +198,7 @@
       activas = activas.filter((x) => x !== t.dataset.quitar);
       renderAcciones(); renderResultados(); renderAviso(false);
     } else if (t.dataset.canal) {
-      canales[t.dataset.canal] = !canales[t.dataset.canal];
-      renderCanales(); renderResultados(); renderAviso(false);
+      alternarCanal(t.dataset.canal, t.dataset.para);
     }
   });
 
