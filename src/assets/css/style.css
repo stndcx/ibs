@@ -1109,3 +1109,88 @@ footer a:hover { color: var(--blanco); }
 .golondrina_enviando span { width: 8px; height: 8px; border-radius: 50%; background: var(--musgo); animation: golondrina_pulso 0.8s ease-in-out infinite; }
 @keyframes golondrina_pulso { 50% { opacity: 0.3; } }
 @media (prefers-reduced-motion: reduce) { .golondrina_enviando span { animation: none; } }
+
+/* ── «¿Cómo se usa?»: botón, recorrido guiado y asistente (RECORRIDO.md) ── */
+.nav_ayuda {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: transparent; color: var(--brote);
+  border: 1px solid rgba(82,183,136,0.45); border-radius: 999px;
+  padding: 0.35rem 0.9rem; font: inherit; font-size: 0.8rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap;
+}
+.nav_ayuda:hover { background: rgba(82,183,136,0.12); }
+.nav_ayuda:focus-visible, .recorrido_globo button:focus-visible, .asistente button:focus-visible, .asistente input:focus-visible { outline: 2px solid var(--brote); outline-offset: 2px; }
+
+.recorrido_capa { position: fixed; inset: 0; z-index: 200; }
+.recorrido_foco {
+  position: fixed; border: 3px solid #FACC15; border-radius: 10px;
+  box-shadow: 0 0 0 9999px rgba(17,24,16,0.6); pointer-events: none;
+  transition: top 0.25s, left 0.25s, width 0.25s, height 0.25s;
+}
+.recorrido_globo {
+  position: fixed; background: var(--arena); color: var(--carbon);
+  border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 1rem 1.1rem;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3); font-family: var(--f-body);
+}
+.recorrido_globo h2 { font-family: var(--f-display); font-weight: 400; font-size: 1.3rem; color: var(--tierra); margin: 0.15rem 0 0.3rem; }
+.recorrido_k { font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.06em; color: var(--grafito); }
+.recorrido_f { font-size: 0.92rem; color: var(--grafito); }
+.recorrido_pie { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+.recorrido_puntos { display: flex; gap: 4px; }
+.recorrido_puntos i { width: 6px; height: 6px; border-radius: 99px; background: rgba(0,0,0,0.15); }
+.recorrido_puntos i.on { width: 16px; background: var(--musgo); }
+.recorrido_ant { background: none; border: 0; color: var(--grafito); font: inherit; font-size: 0.85rem; font-weight: 600; cursor: pointer; padding: 0.4rem 0.6rem; }
+.recorrido_sig { background: var(--tierra); color: var(--arena); border: 0; border-radius: var(--radio); font: inherit; font-size: 0.85rem; font-weight: 600; padding: 0.45rem 1rem; cursor: pointer; }
+.recorrido_sig:hover { background: var(--musgo); }
+.recorrido_x { position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: 0; color: var(--grafito); cursor: pointer; padding: 0.3rem; border-radius: 6px; }
+
+.asistente { position: fixed; right: 1rem; bottom: 1rem; z-index: 150; display: flex; flex-direction: column; align-items: flex-end; gap: 0.6rem; font-family: var(--f-body); }
+.asistente_lanzador {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: var(--tierra); color: var(--arena); border: 0; border-radius: 999px;
+  padding: 0.75rem 1.1rem; font: inherit; font-weight: 600; font-size: 0.9rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25); cursor: pointer;
+}
+.asistente_lanzador:hover { background: var(--musgo); }
+.asistente_panel {
+  width: min(360px, calc(100vw - 2rem)); max-height: min(520px, calc(100vh - 6rem));
+  display: flex; flex-direction: column; background: var(--blanco);
+  border: 1px solid rgba(0,0,0,0.1); border-radius: 14px; box-shadow: 0 20px 40px rgba(0,0,0,0.25); overflow: hidden;
+}
+.asistente_panel header { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 1rem; background: var(--tierra); color: var(--arena); }
+.asistente_panel header strong { display: block; font-size: 0.95rem; }
+.asistente_panel header span { font-size: 0.75rem; color: var(--niebla); }
+.asistente_x { background: none; border: 0; color: var(--arena); cursor: pointer; padding: 0.3rem; }
+.asistente_log { flex: 1; overflow-y: auto; padding: 0.9rem; display: flex; flex-direction: column; gap: 0.5rem; min-height: 120px; }
+.asistente_msg { max-width: 88%; padding: 0.55rem 0.8rem; border-radius: 12px; font-size: 0.88rem; line-height: 1.45; }
+.asistente_msg--bot { background: var(--arena); color: var(--carbon); align-self: flex-start; }
+.asistente_msg--yo { background: var(--musgo); color: var(--blanco); align-self: flex-end; }
+.asistente_chips { display: flex; flex-wrap: wrap; gap: 0.35rem; padding: 0 0.9rem 0.6rem; }
+.asistente_chips button { background: #E3F1E8; color: var(--musgo); border: 0; border-radius: 999px; padding: 0.3rem 0.7rem; font: inherit; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+.asistente_form { display: flex; gap: 0.4rem; padding: 0.7rem; border-top: 1px solid rgba(0,0,0,0.08); }
+.asistente_form input { flex: 1; min-width: 0; border: 1px solid rgba(0,0,0,0.15); border-radius: 8px; padding: 0.55rem 0.7rem; font: inherit; font-size: 0.9rem; background: var(--arena); color: var(--carbon); }
+.asistente_mic, .asistente_enviar { flex-shrink: 0; width: 38px; border-radius: 8px; border: 0; cursor: pointer; font-size: 1rem; }
+.asistente_mic { background: #E3F1E8; color: var(--musgo); }
+.asistente_mic[aria-pressed="true"] { background: #DC2626; color: #fff; animation: asistente_pulso 0.9s ease-in-out infinite; }
+.asistente_enviar { background: var(--tierra); color: var(--arena); }
+.asistente_nota { font-size: 0.72rem; color: var(--grafito); padding: 0 0.9rem 0.7rem; }
+.asistente_oculto { position: absolute; left: -9999px; }
+.asistente_burbuja {
+  position: relative; width: min(300px, calc(100vw - 2rem)); background: var(--blanco); color: var(--carbon);
+  border: 1px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 0.8rem 2rem 0.8rem 0.9rem;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2); font-size: 0.88rem; animation: golondrina_entra 0.35s ease-out;
+}
+.asistente_burbuja button:not(.asistente_burbuja_x) { margin-top: 0.5rem; background: var(--tierra); color: var(--arena); border: 0; border-radius: var(--radio); padding: 0.35rem 0.8rem; font: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.asistente_burbuja_x { position: absolute; top: 0.35rem; right: 0.35rem; background: none; border: 0; cursor: pointer; color: var(--grafito); font-size: 1.1rem; }
+.asistente_iluminado { outline: 3px solid #FACC15; outline-offset: 6px; border-radius: 8px; transition: outline-color 0.3s; }
+@keyframes asistente_pulso { 50% { opacity: 0.55; } }
+@media (prefers-reduced-motion: reduce) {
+  .recorrido_foco { transition: none; }
+  .asistente_mic[aria-pressed="true"], .asistente_burbuja { animation: none; }
+}
+@media (max-width: 600px) {
+  .nav_ayuda { padding: 0.3rem 0.7rem; }
+  .asistente_lanzador span { display: none; }
+}
+/* `hidden` tiene que ganarle al display de arriba (el panel es flex). */
+.asistente [hidden], .recorrido_capa[hidden] { display: none !important; }

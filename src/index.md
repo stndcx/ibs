@@ -17,23 +17,25 @@ description: Índice científico de bioactividad del suelo que integra respiraci
     con recomendaciones de manejo automáticas.
   </p>
   <div class="hero_acciones">
-    <a href="#demo" class="btn_primario">Probar el índice</a>
+    <a href="#demo" class="btn_primario" data-recorrido="probar">Probar el índice</a>
     <a href="https://github.com/stndcx/ibs" target="_blank" class="btn_secundario"><i class="bi bi-github"></i> Ver en GitHub</a>
   </div>
 </section>
 
 <!-- DEMO INTERACTIVA -->
 <section class="indice_demo" id="demo">
-  <div class="indice_estado" id="demo_estado">MODERADO</div>
-  <div class="indice_numero" id="demo_numero">63.4</div>
-  <div class="indice_barra_wrap">
-    <div class="indice_barra_fill" id="demo_barra"></div>
+  <div data-recorrido="puntaje">
+    <div class="indice_estado" id="demo_estado">MODERADO</div>
+    <div class="indice_numero" id="demo_numero">63.4</div>
+    <div class="indice_barra_wrap">
+      <div class="indice_barra_fill" id="demo_barra"></div>
+    </div>
   </div>
-  <p class="indice_desc" id="demo_desc">
+  <p class="indice_desc" id="demo_desc" data-recorrido="recomendacion">
     Aplicar bioestimulante microbiano liviano. Remonitorear en 90 días.
   </p>
 
-  <div class="demo_sliders">
+  <div class="demo_sliders" data-recorrido="deslizadores">
     <div class="slider_item">
       <label class="slider_label">
         CO₂
@@ -139,7 +141,7 @@ description: Índice científico de bioactividad del suelo que integra respiraci
     </div>
   </div>
 
-  <div class="formula_section">
+  <div class="formula_section" data-recorrido="compactacion">
     <h2 class="seccion_titulo">Compactación - El Enfoque IBS</h2>
     <p class="seccion_sub">Busca la pérdida de rendimiento asociada a la resistencia a la penetración.</p>
     <h3 class="seccion_titulo_h3">Factor de Compactación</h3>
@@ -155,7 +157,7 @@ description: Índice científico de bioactividad del suelo que integra respiraci
 </section>
 
 <!-- ESTADOS -->
-<section class="estados_section" id="estados">
+<section class="estados_section" id="estados" data-recorrido="tabla">
   <div class="estados_inner">
     <h2 class="seccion_titulo">Tabla de decisión</h2>
     <p class="seccion_sub">El IBS no solo mide — recomienda. Cada rango activa un protocolo de manejo específico.</p>
@@ -271,7 +273,7 @@ description: Índice científico de bioactividad del suelo que integra respiraci
 </section>
 
 <!-- ===== AGENDA ===== -->
-<section class="sec sec--agenda" id="agenda" style="background: var(--pergamino);">
+<section class="sec sec--agenda" id="agenda" data-recorrido="agenda" style="background: var(--pergamino);">
   <div class="sec__contenedor">
     <p class="sec__eyebrow">Agenda abierta</p>
     <h2 class="sec__titulo">Próximas instancias</h2>

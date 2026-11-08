@@ -19,7 +19,7 @@
 </head>
 <body>
     <!-- Cabecera del sitio -->
-    <nav>
+    <nav data-recorrido="barra">
       <a href="{{ site.baseurl }}/" class="nav_logo">IBS</a>
       <ul class="nav_links">
         <li><a href="{{ site.baseurl }}/#formula">Fórmula</a></li>
@@ -27,8 +27,11 @@
         <li><a href="{{ site.baseurl }}/#modelo">Modelo ML</a></li>
         <li><a href="{{ site.baseurl }}/#integraciones">Integraciones</a></li>
         <li><a href="{{ site.baseurl }}/blog/">Blog</a></li>
+        <li><a href="{{ site.baseurl }}/mapa/" data-recorrido="mapa">Mapa</a></li>
         <li><a href="https://github.com/stndcx/ibs" target="_blank"><i class="bi bi-github"></i> GitHub →</a></li>
       </ul>
+      <!-- Afuera del menú: en celular el menú se oculta y este botón tiene que seguir a la vista. -->
+      <button type="button" class="nav_ayuda" data-como-se-usa><i class="bi bi-question-circle" aria-hidden="true"></i> ¿Cómo se usa?</button>
     </nav>
 
     <!-- Contenido principal -->
@@ -96,12 +99,21 @@ function actualizar() {
   if (window.golondrinaActualizar) window.golondrinaActualizar(ibs, estado);
 }
 
-['sl_co2','sl_mo','sl_ph','sl_temp'].forEach(id => {
-  document.getElementById(id).addEventListener('input', actualizar);
-});
+// La calculadora sólo existe en el inicio: en el blog y en las notas este
+// código fallaba al no encontrar los deslizadores.
+if (document.getElementById('sl_co2')) {
+  ['sl_co2','sl_mo','sl_ph','sl_temp'].forEach(id => {
+    document.getElementById(id).addEventListener('input', actualizar);
+  });
 
-actualizar();
+  actualizar();
+}
 </script>
+
+<!-- Recorrido «¿Cómo se usa?» y asistente por voz y texto: bloques aparte de la
+     calculadora para que un error de una parte no frene a la otra. -->
+<script src="{{ site.baseurl }}/assets/js/recorrido.js" data-base="{{ site.baseurl }}"></script>
+<script src="{{ site.baseurl }}/assets/js/asistente.js" data-base="{{ site.baseurl }}"></script>
 
 </body>
 </html>
