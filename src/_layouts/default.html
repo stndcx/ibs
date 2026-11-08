@@ -45,6 +45,9 @@
       </p>
     </footer>
 
+<!-- Golondrina: acciones de un clic sobre el resultado de la demo (prototipo) -->
+<script src="{{ site.baseurl }}/assets/js/golondrina.js"></script>
+
 <!-- LÓGICA DEMO INTERACTIVA -->
 <script>
 function ibs_calcular(co2, mo, ph, temp) {
@@ -88,6 +91,9 @@ function actualizar() {
   document.getElementById('demo_barra').style.width = ibs + '%';
   document.getElementById('demo_barra').style.background = estado.color;
   document.getElementById('demo_desc').textContent = estado.desc;
+
+  // Golondrina recalcula sus acciones con el valor nuevo (ver assets/js/golondrina.js).
+  if (window.golondrinaActualizar) window.golondrinaActualizar(ibs, estado);
 }
 
 ['sl_co2','sl_mo','sl_ph','sl_temp'].forEach(id => {

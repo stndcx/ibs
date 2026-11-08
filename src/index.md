@@ -63,6 +63,34 @@ description: Índice científico de bioactividad del suelo que integra respiraci
       <input type="range" id="sl_temp" min="5" max="40" step="0.5" value="21">
     </div>
   </div>
+
+  <!-- GOLONDRINA: acciones de un clic según el estado (prototipo, ver GOLONDRINA.md) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="golondrina-logo" viewBox="0 0 100 115"><path d="M 50 6 L 89 19 C 89 62 80 92 50 110 C 20 92 11 62 11 19 Z" fill="#0B1220" stroke="#22D3EE" stroke-width="6" stroke-linejoin="round"/><path d="M66 40 H42 L32 50 V70 L42 80 H58 L66 72 V62 H52" fill="none" stroke="#F1F5F9" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="66" cy="40" r="6" fill="#22D3EE"/><circle cx="52" cy="62" r="6" fill="#22D3EE"/></symbol>
+  </svg>
+  <div class="golondrina" id="golondrina">
+    <div class="golondrina_head">
+      <svg class="golondrina_logo" aria-hidden="true"><use href="#golondrina-logo"/></svg>
+      <div>
+        <p class="golondrina_titulo">Golondrina se encarga del seguimiento</p>
+        <p class="golondrina_sub">Tocá una acción y te aviso donde vos me dejes. Este suelo: <strong data-g="estado"></strong></p>
+      </div>
+    </div>
+
+    <h3 class="golondrina_label">Acciones para este lote</h3>
+    <ul class="golondrina_acciones" data-g="acciones"></ul>
+
+    <div data-g="resultados" aria-live="polite" hidden>
+      <div data-g="aviso"></div>
+      <h3 class="golondrina_label">Lo que voy a hacer</h3>
+      <ul class="golondrina_reglas" data-g="reglas"></ul>
+    </div>
+
+    <h3 class="golondrina_label">¿Dónde te aviso?</h3>
+    <ul class="golondrina_canales" data-g="canales"></ul>
+
+    <p class="golondrina_nota">Prototipo: no se conecta a tus cuentas ni manda nada.</p>
+  </div>
 </section>
 
 <!-- FÓRMULA -->
